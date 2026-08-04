@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import { Play, RotateCcw, HelpCircle, Code, Smartphone } from 'lucide-react';
 
@@ -24,17 +24,33 @@ const QUICK_SNIPPETS = [
   { label: '()', value: '()' },
 ];
 
-export function CodeEditor({ code, onChange, onRun, onReset, onShowHint, isRunning }) {
+const QUICK_HTML_SNIPPETS = [
+  { label: '<button>', value: '<button class="menu-toggle">Menu</button>' },
+  { label: '<nav>', value: '<nav class="menu-nav">\n  \n</nav>' },
+  { label: '<a>', value: '<a href="#" class="menu-link">Link</a>' },
+  { label: 'class=""', value: 'class=""' },
+  { label: '<span>', value: '<span class="bar bar-1"></span>' },
+  { label: '<div>', value: '<div class="menu-overlay"></div>' },
+  { label: 'aria-expanded', value: 'aria-expanded="false"' },
+  { label: 'aria-label', value: 'aria-label="Abrir menu"' },
+];
+
+export function CodeEditor({ code, onChange, htmlCode, onHtmlChange, onRun, onReset, onShowHint, isRunning }) {
+  const [activeTab, setActiveTab] = useState('js'); // 'js' | 'html'
   const editorRef = useRef(null);
 
   const handleEditorDidMount = (editor) => {
     editorRef.current = editor;
   };
 
+  const currentCode = activeTab === 'html' ? htmlCode : code;
+  const currentOnChange = activeTab === 'html' ? onHtmlChange : onChange;
+  const currentSnippets = activeTab === 'html' ? QUICK_HTML_SNIPPETS : QUICK_SNIPPETS;
+
   // Insert code snippet at current selection or cursor position
   const handleInsertSnippet = (snippetText) => {
     if (!editorRef.current) {
-      onChange(code + snippetText);
+      currentOnChange((currentCode || '') + snippetText);
       return;
     }
     const editor = editorRef.current;
@@ -62,11 +78,31 @@ export function CodeEditor({ code, onChange, onRun, onReset, onShowHint, isRunni
     <div className="flex flex-col h-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
       {/* Editor Header / Toolbar */}
       <div className="bg-slate-950 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-800 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <Code className="w-4 h-4 text-amber-400 shrink-0" />
-          <span className="font-mono text-xs text-slate-300 font-semibold truncate">
-            Código (JS / DOM)
-          </span>
+        {/* Tabs HTML / JS */}
+        <div className="flex items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800">
+          <button
+            onClick={() => setActiveTab('html')}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all ${
+              activeTab === 'html'
+                ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Code className="w-3.5 h-3.5 text-amber-400" />
+            <span>index.html</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('js')}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all ${
+              activeTab === 'js'
+                ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Code className="w-3.5 h-3.5 text-sky-400" />
+            <span>script.js</span>
+          </button>
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -103,9 +139,9 @@ export function CodeEditor({ code, onChange, onRun, onReset, onShowHint, isRunni
       <div className="bg-slate-950/90 border-b border-slate-800/80 px-2 py-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar select-none">
         <div className="flex items-center text-[10px] font-mono text-amber-400/80 px-1 shrink-0 gap-1">
           <Smartphone className="w-3 h-3" />
-          <span className="hidden sm:inline">Teclas Rápidas:</span>
+          <span className="hidden sm:inline">Atalhos:</span>
         </div>
-        {QUICK_SNIPPETS.map((snippet, idx) => (
+        {currentSnippets.map((snippet, idx) => (
           <button
             key={idx}
             onClick={() => handleInsertSnippet(snippet.value)}
@@ -119,12 +155,13 @@ export function CodeEditor({ code, onChange, onRun, onReset, onShowHint, isRunni
       {/* Editor Body */}
       <div className="flex-1 min-h-[260px] sm:min-h-[300px] relative bg-[#1e1e1e]" onKeyDown={handleKeyDown}>
         <Editor
+          key={activeTab}
           height="100%"
-          defaultLanguage="javascript"
+          defaultLanguage={activeTab === 'html' ? 'html' : 'javascript'}
           theme="vs-dark"
-          value={code}
+          value={currentCode}
           onMount={handleEditorDidMount}
-          onChange={(val) => onChange(val || '')}
+          onChange={(val) => currentOnChange(val || '')}
           options={{
             fontSize: 13,
             fontFamily: "'Fira Code', 'JetBrains Mono', Consolas, monospace",

@@ -4,12 +4,12 @@
  * captures console output, and executes test assertions.
  */
 
-export function runExerciseTest(exercise, userCode, containerRef) {
+export function runExerciseTest(exercise, userCode, containerRef, userHtml) {
   const logs = [];
   const errors = [];
 
-  // Reset container DOM with initialHtml
-  containerRef.innerHTML = exercise.initialHtml;
+  // Reset container DOM with userHtml or initialHtml
+  containerRef.innerHTML = userHtml !== undefined ? userHtml : exercise.initialHtml;
 
   // Create mock console to capture console.log / console.error
   const customConsole = {

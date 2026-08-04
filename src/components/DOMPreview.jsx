@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Eye, Code2, Layers, RefreshCw } from 'lucide-react';
 
-export function DOMPreview({ exercise, userCode, containerRef }) {
+export function DOMPreview({ exercise, userCode, userHtml, containerRef }) {
   const [activeTab, setActiveTab] = useState('visual'); // 'visual' | 'html'
   const [domHtml, setDomHtml] = useState('');
 
@@ -25,7 +25,7 @@ export function DOMPreview({ exercise, userCode, containerRef }) {
       });
       return () => observer.disconnect();
     }
-  }, [exercise, userCode, containerRef]);
+  }, [exercise, userCode, userHtml, containerRef]);
 
   return (
     <div className="flex flex-col h-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">

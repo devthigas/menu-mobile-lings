@@ -34,6 +34,11 @@ export default function App() {
     return savedCode !== null ? savedCode : currentExercise.initialCode;
   });
 
+  const [htmlCode, setHtmlCode] = useState(() => {
+    const savedHtml = localStorage.getItem(`menulings_html_${currentExercise.id}`);
+    return savedHtml !== null ? savedHtml : currentExercise.initialHtml;
+  });
+
   const [testResult, setTestResult] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [showCliModal, setShowCliModal] = useState(false);
@@ -50,6 +55,10 @@ export default function App() {
   useEffect(() => {
     const savedCode = localStorage.getItem(`menulings_code_${currentExercise.id}`);
     setCode(savedCode !== null ? savedCode : currentExercise.initialCode);
+
+    const savedHtml = localStorage.getItem(`menulings_html_${currentExercise.id}`);
+    setHtmlCode(savedHtml !== null ? savedHtml : currentExercise.initialHtml);
+
     setTestResult(null);
     setShowHint(false);
     localStorage.setItem('menulings_current_id', currentExercise.id);
@@ -61,13 +70,18 @@ export default function App() {
     localStorage.setItem(`menulings_code_${currentExercise.id}`, newCode);
   };
 
+  const handleHtmlChange = (newHtml) => {
+    setHtmlCode(newHtml);
+    localStorage.setItem(`menulings_html_${currentExercise.id}`, newHtml);
+  };
+
   // Run DOM tests
   const handleRunTest = () => {
     if (!containerRef.current) return;
     setIsRunning(true);
 
     setTimeout(() => {
-      const result = runExerciseTest(currentExercise, code, containerRef.current);
+      const result = runExerciseTest(currentExercise, code, containerRef.current, htmlCode);
       setTestResult(result);
       setIsRunning(false);
 
@@ -93,7 +107,9 @@ export default function App() {
   // Reset exercise code
   const handleResetCode = () => {
     setCode(currentExercise.initialCode);
+    setHtmlCode(currentExercise.initialHtml);
     localStorage.removeItem(`menulings_code_${currentExercise.id}`);
+    localStorage.removeItem(`menulings_html_${currentExercise.id}`);
     setTestResult(null);
   };
 
@@ -104,8 +120,10 @@ export default function App() {
       localStorage.removeItem('menulings_completed');
       activeExercises.forEach(ex => {
         localStorage.removeItem(`menulings_code_${ex.id}`);
+        localStorage.removeItem(`menulings_html_${ex.id}`);
       });
       setCode(currentExercise.initialCode);
+      setHtmlCode(currentExercise.initialHtml);
       setTestResult(null);
     }
   };
@@ -128,8 +146,6 @@ export default function App() {
       <Navbar
         completedCount={completedIds.length}
         totalCount={activeExercises.length}
-        mode={mode}
-        onChangeMode={handleModeChange}
         onOpenCli={() => setShowCliModal(true)}
         onResetProgress={handleResetProgress}
         onShowCert={() => setShowCertModal(true)}
@@ -264,6 +280,8 @@ export default function App() {
               <CodeEditor
                 code={code}
                 onChange={handleCodeChange}
+                htmlCode={htmlCode}
+                onHtmlChange={handleHtmlChange}
                 onRun={handleRunTest}
                 onReset={handleResetCode}
                 onShowHint={() => setShowHint(!showHint)}
@@ -278,6 +296,7 @@ export default function App() {
                 <DOMPreview
                   exercise={currentExercise}
                   userCode={code}
+                  userHtml={htmlCode}
                   containerRef={containerRef}
                 />
               </div>
