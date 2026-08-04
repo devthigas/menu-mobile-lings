@@ -1,6 +1,39 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Eye, Code2, Layers, RefreshCw } from 'lucide-react';
 
+function renderLivePreview(userHtml, userCode, containerEl) {
+  if (!containerEl) return;
+  try {
+    containerEl.innerHTML = userHtml || '';
+    if (userCode) {
+      const scopedDoc = {
+        getElementById: (id) => containerEl.querySelector(`#${id}`),
+        querySelector: (selector) => containerEl.querySelector(selector),
+        querySelectorAll: (selector) => containerEl.querySelectorAll(selector),
+        getElementsByClassName: (className) => containerEl.getElementsByClassName(className),
+        getElementsByTagName: (tagName) => containerEl.getElementsByTagName(tagName),
+        createElement: (tagName) => document.createElement(tagName),
+        body: containerEl,
+        defaultView: window,
+        addEventListener: (...args) => containerEl.addEventListener(...args),
+        removeEventListener: (...args) => containerEl.removeEventListener(...args)
+      };
+
+      const runCode = new Function('document', 'console', 'window', `
+        try {
+          ${userCode}
+        } catch (err) {
+          // Silent catch for live preview typing syntax errors
+        }
+      `);
+
+      runCode(scopedDoc, console, window);
+    }
+  } catch (e) {
+    // Ignore top-level parse errors while user is actively typing
+  }
+}
+
 export function DOMPreview({ exercise, userCode, userHtml, containerRef }) {
   const [activeTab, setActiveTab] = useState('visual'); // 'visual' | 'html'
   const [domHtml, setDomHtml] = useState('');
@@ -13,9 +46,12 @@ export function DOMPreview({ exercise, userCode, userHtml, containerRef }) {
   };
 
   useEffect(() => {
-    updateHtmlView();
-    // Observe DOM mutations to dynamically update live HTML view!
     if (containerRef.current) {
+      // Live render user's HTML and JS instantly!
+      renderLivePreview(userHtml !== undefined ? userHtml : exercise.initialHtml, userCode, containerRef.current);
+      updateHtmlView();
+
+      // Observe DOM mutations to dynamically update live HTML view!
       const observer = new MutationObserver(() => updateHtmlView());
       observer.observe(containerRef.current, {
         attributes: true,

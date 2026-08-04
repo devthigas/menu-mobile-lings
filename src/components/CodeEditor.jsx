@@ -77,12 +77,12 @@ export function CodeEditor({ code, onChange, htmlCode, onHtmlChange, onRun, onRe
   return (
     <div className="flex flex-col h-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
       {/* Editor Header / Toolbar */}
-      <div className="bg-slate-950 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-800 flex items-center justify-between gap-2">
+      <div className="bg-slate-950 px-3 sm:px-4 py-2 sm:py-2.5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 min-h-[50px]">
         {/* Tabs HTML / JS */}
-        <div className="flex items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800">
+        <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
           <button
             onClick={() => setActiveTab('html')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
               activeTab === 'html'
                 ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200'
@@ -94,7 +94,7 @@ export function CodeEditor({ code, onChange, htmlCode, onHtmlChange, onRun, onRe
 
           <button
             onClick={() => setActiveTab('js')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
               activeTab === 'js'
                 ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200'
@@ -105,32 +105,34 @@ export function CodeEditor({ code, onChange, htmlCode, onHtmlChange, onRun, onRe
           </button>
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* Action Buttons Toolbar */}
+        <div className="flex items-center gap-2 shrink-0 ml-auto">
           <button
             onClick={onShowHint}
-            className="flex items-center gap-1 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs px-2 sm:px-2.5 py-1.5 rounded-lg transition-colors font-mono"
+            className="flex items-center gap-1 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs px-2.5 py-1.5 rounded-lg transition-colors font-mono"
             title="Ver Dica"
           >
             <HelpCircle className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Dica</span>
+            <span className="inline">Dica</span>
           </button>
 
           <button
             onClick={onReset}
-            className="flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs px-2 sm:px-2.5 py-1.5 rounded-lg transition-colors font-mono"
+            className="flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs px-2.5 py-1.5 rounded-lg transition-colors font-mono"
             title="Restaurar código inicial"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Restaurar</span>
+            <span className="inline">Restaurar</span>
           </button>
 
           <button
             onClick={onRun}
             disabled={isRunning}
-            className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs px-3 sm:px-4 py-1.5 rounded-lg shadow-lg shadow-amber-500/20 transition-all font-mono active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs px-4 py-1.5 rounded-lg shadow-lg shadow-amber-500/20 transition-all font-mono active:scale-95 disabled:opacity-50 shrink-0"
+            title="Executar testes do exercício (Ctrl + Enter)"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
-            <span>{isRunning ? '...' : 'Testar'}</span>
+            <span>{isRunning ? 'Verificando...' : 'Testar'}</span>
           </button>
         </div>
       </div>
