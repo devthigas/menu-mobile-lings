@@ -6,7 +6,7 @@ export const exercises = [
     difficulty: "Iniciante",
     description: "Para criar um menu mobile, precisamos de dois elementos básicos: um botão que o usuário clica para abrir/fechar (com a classe `menu-toggle`) e um contêiner de navegação para os links (com a classe `menu-nav` contendo os elementos `menu-link`). Crie esses elementos no HTML.",
     hint: "Crie um <button class=\"menu-toggle\">Menu</button> e depois um <nav class=\"menu-nav\"> com pelo menos três tags <a class=\"menu-link\"> (ex: Home, Projetos, Contato).",
-    initialHtml: `<div class="navbar-header p-4 bg-slate-900 border border-slate-800 rounded-xl">
+    initialHtml: `<div class="container">
   <!-- TODO: Crie aqui o seu botão de toggle com a classe 'menu-toggle' -->
 
   <!-- TODO: Crie aqui o seu menu com a classe 'menu-nav' -->
@@ -14,6 +14,12 @@ export const exercises = [
 </div>
 
 <style>
+  .container {
+    padding: 16px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+  }
   .menu-toggle {
     background: #f59e0b;
     color: #000;
@@ -79,10 +85,10 @@ solucao();
     difficulty: "Iniciante",
     description: "Em telas móveis, o menu normalmente fica posicionado fora da tela de forma fixa e desliza para dentro ao ser ativado. Configure o estilo do `.menu-nav` para ficar oculto 100% à direita (`transform: translateX(100%)`) de forma fixa e configure-o para deslizar de volta para `translateX(0)` quando possuir a classe `.open`.",
     hint: "Use `position: fixed; right: 0; top: 0; width: 250px; height: 100vh; transform: translateX(100%); transition: transform 0.3s ease-in-out;` para a classe `.menu-nav`, e `transform: translateX(0);` na classe combinada `.menu-nav.open`.",
-    initialHtml: `<div class="app-mockup relative overflow-hidden bg-slate-900 border border-slate-800 rounded-xl h-[300px] w-full">
-  <div class="p-4 flex justify-between items-center bg-slate-950 border-b border-slate-850">
-    <span class="text-sm font-bold font-mono text-amber-400">Meu Site</span>
-    <button class="menu-toggle px-3 py-1 bg-amber-500 text-slate-950 rounded font-mono text-xs font-bold border-none cursor-pointer">Menu</button>
+    initialHtml: `<div class="app-mockup">
+  <div class="header">
+    <span class="logo">Meu Site</span>
+    <button class="menu-toggle">Menu</button>
   </div>
   
   <nav class="menu-nav">
@@ -91,12 +97,53 @@ solucao();
     <a href="#" class="menu-link">Serviços</a>
   </nav>
 
-  <div class="p-6 text-slate-400 text-xs font-mono">
+  <div class="content">
     Conteúdo principal do site. Adicione o CSS para esconder o menu lateral.
   </div>
 </div>
 
 <style>
+  .app-mockup {
+    position: relative;
+    overflow: hidden;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    height: 300px;
+    width: 100%;
+  }
+  .header {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #020617;
+    border-bottom: 1px solid #1e293b;
+  }
+  .logo {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: monospace;
+    color: #f59e0b;
+  }
+  .menu-toggle {
+    padding: 4px 12px;
+    background: #f59e0b;
+    color: #020617;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+  }
+  .content {
+    padding: 24px;
+    color: #94a3b8;
+    font-size: 12px;
+    font-family: monospace;
+  }
+
   .menu-nav {
     position: absolute; /* Usamos absolute aqui para simular o fixed dentro do container de preview */
     top: 0;
@@ -143,14 +190,11 @@ solucao();
       
       const style = window.getComputedStyle(nav);
       
-      // Initially, it should be translated out of view (or styled via CSS)
-      // Since it's compiled, we can inspect if adding .open makes it visible
       nav.classList.add('open');
       const openStyle = window.getComputedStyle(nav);
       const openTransform = openStyle.transform || openStyle.webkitTransform;
       nav.classList.remove('open');
       
-      // Let's also check transitions are set
       const transitionProp = style.transition || style.transitionProperty;
       if (!transitionProp.includes('transform') && !transitionProp.includes('all')) {
         return { pass: false, error: "A propriedade transition do '.menu-nav' deve aplicar-se à propriedade 'transform' ou 'all'." };
@@ -166,10 +210,10 @@ solucao();
     difficulty: "Médio",
     description: "Adicione interatividade ao botão. Ao clicar em `.menu-toggle`, a classe `.open` deve ser alternada (adicionada/removida) no `.menu-nav` para abrir e fechar o menu.",
     hint: "Selecione `.menu-toggle` e `.menu-nav`. Use `toggleBtn.addEventListener('click', () => { menu.classList.toggle('open'); })`.",
-    initialHtml: `<div class="app-mockup relative overflow-hidden bg-slate-900 border border-slate-800 rounded-xl h-[280px] w-full">
-  <div class="p-4 flex justify-between items-center bg-slate-950 border-b border-slate-850">
-    <span class="text-sm font-bold font-mono text-amber-400">Meu Site</span>
-    <button class="menu-toggle px-3 py-1 bg-amber-500 text-slate-950 rounded font-mono text-xs font-bold border-none cursor-pointer">Menu</button>
+    initialHtml: `<div class="app-mockup">
+  <div class="header">
+    <span class="logo">Meu Site</span>
+    <button class="menu-toggle">Menu</button>
   </div>
   
   <nav class="menu-nav">
@@ -179,6 +223,40 @@ solucao();
 </div>
 
 <style>
+  .app-mockup {
+    position: relative;
+    overflow: hidden;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    height: 280px;
+    width: 100%;
+  }
+  .header {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #020617;
+    border-bottom: 1px solid #1e293b;
+  }
+  .logo {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: monospace;
+    color: #f59e0b;
+  }
+  .menu-toggle {
+    padding: 4px 12px;
+    background: #f59e0b;
+    color: #020617;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+  }
   .menu-nav {
     position: absolute;
     top: 0;
@@ -224,13 +302,11 @@ solucao();
       if (!btn) return { pass: false, error: "Botão '.menu-toggle' não encontrado." };
       if (!menu) return { pass: false, error: "Menu '.menu-nav' não encontrado." };
       
-      // Simulate click
       btn.click();
       if (!menu.classList.contains('open')) {
         return { pass: false, error: "Ao clicar no botão, a classe 'open' não foi adicionada ao menu." };
       }
       
-      // Simulate click again
       btn.click();
       if (menu.classList.contains('open')) {
         return { pass: false, error: "No segundo clique, a classe 'open' deve ser removida do menu." };
@@ -246,9 +322,9 @@ solucao();
     difficulty: "Médio",
     description: "Um botão de menu mobile profissional se transforma em um 'X' quando o menu está aberto. Crie as 3 barras internas e anime-as usando CSS transitions adicionando a classe `open` tanto no menu quanto no próprio botão de toggle.",
     hint: "Use `transform: translateY(9px) rotate(45deg);` na bar-1, `opacity: 0;` na bar-2 e `transform: translateY(-9px) rotate(-45deg);` na bar-3 quando o botão `.menu-toggle` possuir a classe `.open`.",
-    initialHtml: `<div class="app-mockup relative overflow-hidden bg-slate-900 border border-slate-800 rounded-xl h-[280px] w-full">
-  <div class="p-4 flex justify-between items-center bg-slate-950 border-b border-slate-850">
-    <span class="text-sm font-bold font-mono text-amber-400">Meu Site</span>
+    initialHtml: `<div class="app-mockup">
+  <div class="header">
+    <span class="logo">Meu Site</span>
     
     <button class="menu-toggle">
       <!-- Três barras para o hamburger -->
@@ -265,6 +341,29 @@ solucao();
 </div>
 
 <style>
+  .app-mockup {
+    position: relative;
+    overflow: hidden;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    height: 280px;
+    width: 100%;
+  }
+  .header {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #020617;
+    border-bottom: 1px solid #1e293b;
+  }
+  .logo {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: monospace;
+    color: #f59e0b;
+  }
   .menu-toggle {
     background: none;
     border: none;
@@ -345,7 +444,6 @@ solucao();
         return { pass: false, error: "A classe 'open' não foi adicionada ao menu '.menu-nav'." };
       }
       
-      // Check styles of bar-2 in open state
       const bar2 = doc.querySelector('.bar-2');
       const bar2Style = window.getComputedStyle(bar2);
       if (parseFloat(bar2Style.opacity) !== 0) {
@@ -362,11 +460,11 @@ solucao();
     difficulty: "Avançado",
     description: "UX e Acessibilidade importam! Altere o atributo `aria-expanded` (true/false) e o `aria-label` do botão. Além disso, impeça a rolagem da página ao adicionar a classe `.no-scroll` ao `body` quando o menu estiver aberto.",
     hint: "Use `btn.setAttribute('aria-expanded', isOpen.toString())` e `document.body.classList.toggle('no-scroll', isOpen)`.",
-    initialHtml: `<div class="app-mockup relative overflow-hidden bg-slate-900 border border-slate-800 rounded-xl h-[280px] w-full">
-  <div class="p-4 flex justify-between items-center bg-slate-950 border-b border-slate-850">
-    <span class="text-sm font-bold font-mono text-amber-400">Acessível</span>
+    initialHtml: `<div class="app-mockup">
+  <div class="header">
+    <span class="logo">Acessível</span>
     
-    <button class="menu-toggle px-3 py-1 bg-amber-500 text-slate-950 rounded font-mono text-xs font-bold border-none cursor-pointer" aria-expanded="false" aria-label="Abrir menu">
+    <button class="menu-toggle" aria-expanded="false" aria-label="Abrir menu">
       Menu
     </button>
   </div>
@@ -378,6 +476,40 @@ solucao();
 </div>
 
 <style>
+  .app-mockup {
+    position: relative;
+    overflow: hidden;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    height: 280px;
+    width: 100%;
+  }
+  .header {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #020617;
+    border-bottom: 1px solid #1e293b;
+  }
+  .logo {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: monospace;
+    color: #f59e0b;
+  }
+  .menu-toggle {
+    padding: 4px 12px;
+    background: #f59e0b;
+    color: #020617;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+  }
   .menu-nav {
     position: absolute;
     top: 0;
@@ -431,7 +563,6 @@ solucao();
       if (!btn) return { pass: false, error: "Botão '.menu-toggle' não encontrado." };
       if (!menu) return { pass: false, error: "Menu '.menu-nav' não encontrado." };
       
-      // Trigger click to open
       btn.click();
       
       if (btn.getAttribute('aria-expanded') !== 'true') {
@@ -441,13 +572,10 @@ solucao();
         return { pass: false, error: "Ao abrir o menu, o atributo 'aria-label' deve ser 'Fechar menu'." };
       }
       
-      // Check body class
-      // In this test runner, doc.body is represented by the container element, so we look at doc.body
       if (!doc.body.classList.contains('no-scroll')) {
         return { pass: false, error: "A classe 'no-scroll' deve ser adicionada ao body quando o menu estiver aberto." };
       }
       
-      // Trigger click to close
       btn.click();
       if (btn.getAttribute('aria-expanded') !== 'false') {
         return { pass: false, error: "Ao fechar o menu, o atributo 'aria-expanded' deve retornar para 'false'." };
@@ -469,11 +597,11 @@ solucao();
     difficulty: "Avançado",
     description: "Para concluir nosso menu mobile com chave de ouro, o menu deve fechar automaticamente ao clicar em um link interno ou ao clicar na área escura (Overlay) de fundo.",
     hint: "Adicione ouvintes de clique ao overlay e a cada um dos links que chamam a função de fechar.",
-    initialHtml: `<div class="app-mockup relative overflow-hidden bg-slate-900 border border-slate-800 rounded-xl h-[280px] w-full">
-  <div class="p-4 flex justify-between items-center bg-slate-950 border-b border-slate-850">
-    <span class="text-sm font-bold font-mono text-amber-400">Site Completo</span>
+    initialHtml: `<div class="app-mockup">
+  <div class="header">
+    <span class="logo">Site Completo</span>
     
-    <button class="menu-toggle px-3 py-1 bg-amber-500 text-slate-950 rounded font-mono text-xs font-bold border-none cursor-pointer">Menu</button>
+    <button class="menu-toggle">Menu</button>
   </div>
   
   <!-- Overlay escuro -->
@@ -487,6 +615,40 @@ solucao();
 </div>
 
 <style>
+  .app-mockup {
+    position: relative;
+    overflow: hidden;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    height: 280px;
+    width: 100%;
+  }
+  .header {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #020617;
+    border-bottom: 1px solid #1e293b;
+  }
+  .logo {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: monospace;
+    color: #f59e0b;
+  }
+  .menu-toggle {
+    padding: 4px 12px;
+    background: #f59e0b;
+    color: #020617;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+  }
   .menu-overlay {
     position: absolute;
     inset: 0;
@@ -564,22 +726,18 @@ solucao();
         return { pass: false, error: "Elementos necessários (.menu-toggle, .menu-nav, .menu-overlay, .menu-link) não encontrados." };
       }
       
-      // Open first
       btn.click();
       if (!menu.classList.contains('open')) {
         return { pass: false, error: "O botão de menu não abriu o menu no teste." };
       }
       
-      // Click overlay
       overlay.click();
       if (menu.classList.contains('open')) {
         return { pass: false, error: "Clicar no overlay deveria ter removido a classe 'open' do menu." };
       }
       
-      // Open again
       btn.click();
       
-      // Click link
       links[0].click();
       if (menu.classList.contains('open')) {
         return { pass: false, error: "Clicar em um link (.menu-link) deveria ter fechado o menu." };
