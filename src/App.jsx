@@ -189,28 +189,49 @@ export default function App() {
         <main className="flex-1 flex flex-col p-3 sm:p-4 gap-3 sm:gap-4 overflow-y-auto lg:overflow-hidden bg-slate-950 pb-20 lg:pb-4">
           
           {/* Exercise Info Card */}
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
-            <div>
+          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg shrink-0">
+            <div className="flex-1">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <span className="bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-md">
                   {currentExercise.category}
                 </span>
+                <span className="text-slate-500 font-mono text-xs">
+                  ({currentIndex + 1} de {activeExercises.length})
+                </span>
                 <h2 className="font-mono text-sm sm:text-base font-bold text-white">
                   {currentExercise.title}
                 </h2>
+                {completedIds.includes(currentExercise.id) && (
+                  <span className="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10px] font-bold px-2 py-0.5 rounded-md">
+                    <CheckCircle2 className="w-3 h-3" />
+                    CONCLUÍDO
+                  </span>
+                )}
               </div>
               <p className="text-xs text-slate-300">
                 {currentExercise.description}
               </p>
             </div>
 
-            {/* Status Indicator */}
-            {completedIds.includes(currentExercise.id) && (
-              <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold px-3 py-1.5 rounded-xl shrink-0 self-start sm:self-auto">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>CONCLUÍDO</span>
-              </div>
-            )}
+            {/* Quick Prev / Next Exercise Nav */}
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => currentIndex > 0 && setCurrentId(activeExercises[currentIndex - 1].id)}
+                disabled={currentIndex === 0}
+                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-300 border border-slate-700 rounded-xl text-xs font-mono transition-colors"
+                title="Exercício Anterior"
+              >
+                Anterior
+              </button>
+              <button
+                onClick={handleNextExercise}
+                disabled={!hasNext}
+                className="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 disabled:opacity-40 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-mono font-bold transition-colors"
+                title="Próximo Exercício"
+              >
+                Próximo
+              </button>
+            </div>
           </div>
 
           {/* Hint Drawer */}
